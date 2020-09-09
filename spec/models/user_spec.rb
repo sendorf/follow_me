@@ -18,13 +18,13 @@ RSpec.describe User, type: :model do
 
   describe 'relations' do
     it { is_expected.to have_many :received_follows }
-    it { is_expected.to have_many :followers }
+    it { is_expected.to have_many(:followers).through(:received_follows) }
 
     it { is_expected.to have_many :sent_follows }
-    it { is_expected.to have_many :followeds }
+    it { is_expected.to have_many(:followeds).through(:sent_follows) }
   end
 
-  describe 'name' do
+  describe '#name' do
     it 'returns the name and last name separated by space' do
       expect(subject.name).to eq 'John Doe'
     end

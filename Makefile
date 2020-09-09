@@ -8,7 +8,7 @@ help:  ## Display this help
 
 clean_db: ## Drops the current data base and creates it from scratch
 	$(info Creating DataBase)
-	@docker-compose run --rm follow_me bundle exec rake db:drop db:create db:migrate
+	@docker-compose run --rm follow_me bundle exec rake db:drop db:create db:migrate db:seed
 
 install:  ## Checks and installs dependencies
 	$(info Checking and getting dependencies)

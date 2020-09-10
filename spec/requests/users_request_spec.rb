@@ -10,58 +10,118 @@ RSpec.describe 'Users', type: :request do
   let(:user) { double(User, id: user_id) }
   let(:follower) { { id: follower_id, firstname: follower_firstname, lastname: follower_lastname } }
   let(:followers) { [follower] }
+  let(:followeds) { followers }
 
-  describe 'request list of all followers of a user' do
-    before do
-      allow(user).to receive(:followers).and_return followers
-    end
-
-    context 'when the user exists' do
+  describe '#followers' do
+    describe 'request list of all followers of a user' do
       before do
-        allow(User).to receive(:find).with(user_id).and_return user
+        allow(user).to receive(:followers).and_return followers
       end
 
-      context 'when the list is empty' do
-        let(:followers) { [] }
+      context 'when the user exists' do
+        before do
+          allow(User).to receive(:find).with(user_id).and_return user
+        end
 
-        it 'returns an empty collection' do
-          get user_followers_path(user_id: user_id)
-          expect(response).to be_successful
-          expect(response.body).to eq followers.to_json
+        context 'when the list is empty' do
+          let(:followers) { [] }
+
+          it 'returns an empty collection' do
+            get user_followers_path(user_id: user_id)
+            expect(response).to be_successful
+            expect(response.body).to eq followers.to_json
+          end
+        end
+
+        context 'when there is a follower' do
+          it 'returns the collection' do
+            get user_followers_path(user_id: user_id)
+            expect(response).to be_successful
+            expect(response.body).to eq followers.to_json
+          end
         end
       end
 
-      context 'when there is a follower' do
-        it 'returns the collection' do
+      context 'when the user doesn\'t exists' do
+        let(:error_body) { { message: "Couldn't find User with 'id'=#{user_id}" } }
+
+        it 'returns an error' do
           get user_followers_path(user_id: user_id)
-          expect(response).to be_successful
-          expect(response.body).to eq followers.to_json
+          expect(response.status).to eq 422
+          expect(response.body).to eq error_body.to_json
+        end
+      end
+
+      context 'when there\'s an error' do
+        let(:error_body) { { message: error_message } }
+        let(:error_message) { 'Error message' }
+
+        before do
+          expect(User).to receive(:find).with(user_id).and_raise StandardError.new(error_message)
+        end
+
+        it 'returns an error with the error message' do
+          get user_followers_path(user_id: user_id)
+          expect(response.status).to eq 422
+          expect(response.body).to eq error_body.to_json
         end
       end
     end
+  end
 
-    context 'when the user doesn\'t exists' do
-      let(:error_body) { { message: "Couldn't find User with 'id'=#{user_id}" } }
-
-      it 'returns an error' do
-        get user_followers_path(user_id: user_id)
-        expect(response.status).to eq 422
-        expect(response.body).to eq error_body.to_json
-      end
-    end
-
-    context 'when there\'s an error' do
-      let(:error_body) { { message: error_message } }
-      let(:error_message) { 'Error message' }
-
+  describe '#followers' do
+    describe 'request list of user followed people' do
       before do
-        expect(User).to receive(:find).with(user_id).and_raise StandardError.new(error_message)
+        allow(user).to receive(:followeds).and_return followeds
       end
 
-      it 'returns an error with the error message' do
-        get user_followers_path(user_id: user_id)
-        expect(response.status).to eq 422
-        expect(response.body).to eq error_body.to_json
+      context 'when the user exists' do
+        before do
+          allow(User).to receive(:find).with(user_id).and_return user
+        end
+
+        context 'when the list is empty' do
+          let(:followers) { [] }
+
+          it 'returns an empty collection' do
+            get user_followeds_path(user_id: user_id)
+            expect(response).to be_successful
+            expect(response.body).to eq followeds.to_json
+          end
+        end
+
+        context 'when there is a followed' do
+          it 'returns the collection' do
+            get user_followeds_path(user_id: user_id)
+            expect(response).to be_successful
+            expect(response.body).to eq followeds.to_json
+          end
+        end
+      end
+
+      context 'when the user doesn\'t exists' do
+        let(:error_body) { { message: "Couldn't find User with 'id'=#{user_id}" } }
+
+        it 'returns an error' do
+          get user_followeds_path(user_id: user_id)
+          expect(response.status).to eq 422
+          expect(response.body).to eq error_body.to_json
+        end
+      end
+
+      context 'when there\'s an error' do
+        let(:error_body) { { message: error_message } }
+        let(:error_message) { 'Error message' }
+
+        before do
+          expect(User).to receive(:find).with(user_id).and_raise StandardError.new(error_message)
+        end
+
+        it 'returns an error with the error message' do
+          get user_followeds_path(user_id: user_id)
+          expect(response.status).to eq 422
+          expect(response.body).to eq error_body.to_json
+        end
       end
     end
   end

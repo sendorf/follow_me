@@ -8,4 +8,12 @@ class UsersController < ApplicationController
   rescue StandardError => e
     render json: { message: e.message }, status: :unprocessable_entity
   end
+
+  def followeds
+    @user = User.find(params[:user_id])
+
+    render json: @user.followeds
+  rescue StandardError => e
+    render json: { message: e.message }, status: :unprocessable_entity
+  end
 end

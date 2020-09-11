@@ -69,7 +69,7 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
-  describe '#followers' do
+  describe '#followeds' do
     describe 'request list of user followed people' do
       before do
         allow(user).to receive(:followeds).and_return followeds

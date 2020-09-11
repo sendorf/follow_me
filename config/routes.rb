@@ -7,4 +7,9 @@ Rails.application.routes.draw do
     get :followers
     get :followeds
   end
+
+  resources :clubs, only: [] do
+    get :followers
+    get :followeds
+  end
 end

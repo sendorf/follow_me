@@ -2,12 +2,12 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Users', type: :request do
-  let(:user_id) { 'd4256ca3-2006-4c4d-a25b-f3114762beb4' }
+RSpec.describe 'Clubs', type: :request do
+  let(:club_id) { 'd4256ca3-2006-4c4d-a25b-f3114762beb4' }
   let(:user_follower_id) { '0667c143-2548-484f-a4ce-87ede1851627' }
   let(:user_follower_firstname) { 'Jack' }
   let(:user_follower_lastname) { 'Johnson' }
-  let(:user) { double(User, id: user_id) }
+  let(:club) { double(Club, id: club_id) }
   let(:user_follower) do
     { id: user_follower_id, firstname: user_follower_firstname, lastname: user_follower_lastname, type: 'User' }
   end
@@ -20,19 +20,19 @@ RSpec.describe 'Users', type: :request do
   describe '#followers' do
     describe 'request list of all followers of a user' do
       before do
-        allow(user).to receive(:followers).and_return followers
+        allow(club).to receive(:followers).and_return followers
       end
 
       context 'when the user exists' do
         before do
-          allow(User).to receive(:find).with(user_id).and_return user
+          allow(Club).to receive(:find).with(club_id).and_return club
         end
 
         context 'when the list is empty' do
           let(:followers) { [] }
 
           it 'returns an empty collection' do
-            get user_followers_path(user_id: user_id)
+            get club_followers_path(club_id: club_id)
             expect(response).to be_successful
             expect(response.body).to eq followers.to_json
           end
@@ -40,7 +40,7 @@ RSpec.describe 'Users', type: :request do
 
         context 'when there is a follower' do
           it 'returns the collection' do
-            get user_followers_path(user_id: user_id)
+            get club_followers_path(club_id: club_id)
             expect(response).to be_successful
             expect(response.body).to eq followers.to_json
           end
@@ -48,10 +48,10 @@ RSpec.describe 'Users', type: :request do
       end
 
       context 'when the user doesn\'t exists' do
-        let(:error_body) { { message: "Couldn't find User with 'id'=#{user_id}" } }
+        let(:error_body) { { message: "Couldn't find Club with 'id'=#{club_id}" } }
 
         it 'returns an error' do
-          get user_followers_path(user_id: user_id)
+          get club_followers_path(club_id: club_id)
           expect(response.status).to eq 422
           expect(response.body).to eq error_body.to_json
         end
@@ -62,11 +62,11 @@ RSpec.describe 'Users', type: :request do
         let(:error_message) { 'Error message' }
 
         before do
-          expect(User).to receive(:find).with(user_id).and_raise StandardError.new(error_message)
+          expect(Club).to receive(:find).with(club_id).and_raise StandardError.new(error_message)
         end
 
         it 'returns an error with the error message' do
-          get user_followers_path(user_id: user_id)
+          get club_followers_path(club_id: club_id)
           expect(response.status).to eq 422
           expect(response.body).to eq error_body.to_json
         end
@@ -77,19 +77,19 @@ RSpec.describe 'Users', type: :request do
   describe '#followeds' do
     describe 'request list of user followed people' do
       before do
-        allow(user).to receive(:followeds).and_return followeds
+        allow(club).to receive(:followeds).and_return followeds
       end
 
       context 'when the user exists' do
         before do
-          allow(User).to receive(:find).with(user_id).and_return user
+          allow(Club).to receive(:find).with(club_id).and_return club
         end
 
         context 'when the list is empty' do
           let(:followeds) { [] }
 
           it 'returns an empty collection' do
-            get user_followeds_path(user_id: user_id)
+            get club_followeds_path(club_id: club_id)
             expect(response).to be_successful
             expect(response.body).to eq followeds.to_json
           end
@@ -97,7 +97,7 @@ RSpec.describe 'Users', type: :request do
 
         context 'when there is a followed' do
           it 'returns the collection' do
-            get user_followeds_path(user_id: user_id)
+            get club_followeds_path(club_id: club_id)
             expect(response).to be_successful
             expect(response.body).to eq followeds.to_json
           end
@@ -105,10 +105,10 @@ RSpec.describe 'Users', type: :request do
       end
 
       context 'when the user doesn\'t exists' do
-        let(:error_body) { { message: "Couldn't find User with 'id'=#{user_id}" } }
+        let(:error_body) { { message: "Couldn't find Club with 'id'=#{club_id}" } }
 
         it 'returns an error' do
-          get user_followeds_path(user_id: user_id)
+          get club_followeds_path(club_id: club_id)
           expect(response.status).to eq 422
           expect(response.body).to eq error_body.to_json
         end
@@ -119,11 +119,11 @@ RSpec.describe 'Users', type: :request do
         let(:error_message) { 'Error message' }
 
         before do
-          expect(User).to receive(:find).with(user_id).and_raise StandardError.new(error_message)
+          expect(Club).to receive(:find).with(club_id).and_raise StandardError.new(error_message)
         end
 
         it 'returns an error with the error message' do
-          get user_followeds_path(user_id: user_id)
+          get club_followeds_path(club_id: club_id)
           expect(response.status).to eq 422
           expect(response.body).to eq error_body.to_json
         end

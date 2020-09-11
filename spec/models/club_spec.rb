@@ -2,11 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.describe Club, type: :model do
   let(:id) { 'd4256ca3-2006-4c4d-a25b-f3114762beb4' }
-  let(:firstname) { 'John' }
-  let(:lastname) { 'Doe' }
-  let(:name) { "#{firstname} #{lastname}" }
+  let(:name) { 'Club 1' }
   let(:user_follower_id) { '0667c143-2548-484f-a4ce-87ede1851627' }
   let(:user_follower_firstname) { 'Jack' }
   let(:user_follower_lastname) { 'Johnson' }
@@ -24,7 +22,7 @@ RSpec.describe User, type: :model do
   let(:followers) { [club_follower, user_follower].compact }
   let(:followeds) { followers }
 
-  subject { described_class.new(id: id, firstname: firstname, lastname: lastname) }
+  subject { described_class.new(id: id, name: name) }
 
   before do
     allow(subject).to receive(:user_followers).and_return user_followers
@@ -40,8 +38,7 @@ RSpec.describe User, type: :model do
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:firstname) }
-    it { should validate_presence_of(:lastname) }
+    it { should validate_presence_of(:name) }
   end
 
   describe 'relations' do
@@ -54,18 +51,10 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:club_followeds).through(:sent_follows) }
   end
 
-  describe '#name' do
-    it 'returns the name and last name separated by space' do
-      expect(subject.name).to eq name
-    end
-  end
-
   describe '#attributes' do
     it 'returns the attributes to be serialized' do
       expect(subject.attributes).to eq({
                                          id: id,
-                                         firstname: firstname,
-                                         lastname: lastname,
                                          name: name,
                                          type: described_class.name
                                        })

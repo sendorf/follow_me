@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-class User < ApplicationRecord
+class Club < ApplicationRecord
   include ActiveModel::Serializers::JSON
 
   self.implicit_order_column = 'created_at'
 
-  validates_presence_of :firstname
-  validates_presence_of :lastname
+  validates_presence_of :name
 
   has_many :received_follows, as: :followed, class_name: 'Follow', dependent: :destroy
   has_many :sent_follows, as: :follower, class_name: 'Follow', dependent: :destroy
@@ -22,8 +21,6 @@ class User < ApplicationRecord
   def attributes
     {
       id: id,
-      firstname: firstname,
-      lastname: lastname,
       name: name,
       type: type
     }
@@ -39,9 +36,5 @@ class User < ApplicationRecord
 
   def type
     self.class.name
-  end
-
-  def name
-    firstname + ' ' + lastname
   end
 end

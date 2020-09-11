@@ -18,12 +18,12 @@ RSpec.describe 'Clubs', type: :request do
   let(:followeds) { followers }
 
   describe '#followers' do
-    describe 'request list of all followers of a user' do
+    describe 'request list of all followers of a club' do
       before do
         allow(club).to receive(:followers).and_return followers
       end
 
-      context 'when the user exists' do
+      context 'when the club exists' do
         before do
           allow(Club).to receive(:find).with(club_id).and_return club
         end
@@ -47,7 +47,7 @@ RSpec.describe 'Clubs', type: :request do
         end
       end
 
-      context 'when the user doesn\'t exists' do
+      context 'when the club doesn\'t exists' do
         let(:error_body) { { message: "Couldn't find Club with 'id'=#{club_id}" } }
 
         it 'returns an error' do
@@ -75,12 +75,12 @@ RSpec.describe 'Clubs', type: :request do
   end
 
   describe '#followeds' do
-    describe 'request list of user followed people' do
+    describe 'request list of club followed people' do
       before do
         allow(club).to receive(:followeds).and_return followeds
       end
 
-      context 'when the user exists' do
+      context 'when the club exists' do
         before do
           allow(Club).to receive(:find).with(club_id).and_return club
         end
@@ -104,7 +104,7 @@ RSpec.describe 'Clubs', type: :request do
         end
       end
 
-      context 'when the user doesn\'t exists' do
+      context 'when the club doesn\'t exists' do
         let(:error_body) { { message: "Couldn't find Club with 'id'=#{club_id}" } }
 
         it 'returns an error' do

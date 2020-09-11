@@ -27,7 +27,6 @@ shared_examples_for 'followable' do
     allow(subject).to receive(:club_followeds).and_return club_followeds
   end
 
-
   describe 'relations' do
     it { is_expected.to have_many :received_follows }
     it { is_expected.to have_many(:user_followers).through(:received_follows) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Followable
   extend ActiveSupport::Concern
   included do
